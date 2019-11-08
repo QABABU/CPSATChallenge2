@@ -1,5 +1,6 @@
 package SSPageObjects;
 
+import HelperClasses.CommonActions;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
@@ -34,32 +35,27 @@ public class SSHomePage {
 
     public void navigateToMenFragrance() throws InterruptedException {
 
-        Actions actions = new Actions(driver);
+        CommonActions.waitForElementVisibility(driver, cookiesCloseBtn);
+        CommonActions.clickGivenElement(driver, cookiesCloseBtn);
+        CommonActions.moveToGivenElement(driver, menMenuLink);
+        CommonActions.moveToGivenElement(driver, menFragranceLink);
+    }
 
-        Thread.sleep(3000);
-
-        if(cookiesCloseBtn.isDisplayed()){
-            cookiesCloseBtn.click();
-        }
-
-        actions.moveToElement(menMenuLink).build().perform();
-
-        Thread.sleep(2000);
-
-        actions.moveToElement(menFragranceLink).build().perform();
-
-        Thread.sleep(2000);
-
-        for (WebElement element: fragranceAccessoriesLinks){
-
-            System.out.println(element.getText());
+    public void printMenFragranceAccessories(){
+        try{
+            for (WebElement element: fragranceAccessoriesLinks){
+                System.out.println(element.getText());
+            }
+        }catch (Exception e){
+            e.printStackTrace();
         }
     }
 
 
     public SSStoreFinderPage navigateToStoreFinderPage(){
-
-        allStoriesLink.click();
+        CommonActions.waitForElementVisibility(driver, cookiesCloseBtn);
+        CommonActions.clickGivenElement(driver, cookiesCloseBtn);
+        CommonActions.clickGivenElement(driver, allStoriesLink);
         return new SSStoreFinderPage(driver);
     }
 
