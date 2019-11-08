@@ -18,6 +18,15 @@ public class SSHomePage {
         PageFactory.initElements(driver, this);
     }
 
+    @FindBy(xpath = "//div[starts-with(@id,'slick-slide')]//div//a/img")
+    private List<WebElement> bannerSliders;
+
+    @FindBy(xpath = "//ul[contains(@class,'slick-dots')]/preceding-sibling::div[@class='dy-slick-arrow dy-next-arrow slick-arrow']")
+    private WebElement sliderNextArrow;
+
+    @FindBy(xpath = "//li[@class='slick-active']//button[@id='slick-slide-control00']")
+    private WebElement firstSlickSlideButton;
+
     @FindBy(xpath = "//a[@title='MEN']")
     private WebElement menMenuLink;
 
@@ -57,6 +66,17 @@ public class SSHomePage {
         CommonActions.clickGivenElement(driver, cookiesCloseBtn);
         CommonActions.clickGivenElement(driver, allStoriesLink);
         return new SSStoreFinderPage(driver);
+    }
+
+    public void clickSliderNextButton(){
+
+        CommonActions.clickGivenElement(driver, sliderNextArrow);
+    }
+
+
+
+    public List<WebElement> getAllBanners(){
+        return bannerSliders;
     }
 
 

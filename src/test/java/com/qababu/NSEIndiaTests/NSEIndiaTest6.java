@@ -32,7 +32,6 @@ public class NSEIndiaTest6 {
 
 
     private WebDriver driver;
-    private WebDriverWait wait;
 
     private FileOutputStream fos;
     private XSSFWorkbook wb;
@@ -45,7 +44,7 @@ public class NSEIndiaTest6 {
         driver = new ChromeDriver();
         driver.manage().window().maximize();
         driver.manage().timeouts().implicitlyWait(15, TimeUnit.SECONDS);
-        wait = new WebDriverWait(driver, 20);
+        WebDriverWait wait = new WebDriverWait(driver, 20);
 
         File file = new File(".\\src\\main\\resources\\GainersLosersData.xlsx");
 
@@ -75,11 +74,11 @@ public class NSEIndiaTest6 {
 
         int rowsCount = table.findElements(By.tagName("tr")).size();
 
-        System.out.println("No of Rows in the table: "+rowsCount);
+        System.out.println("No of Rows in the table: " + rowsCount);
 
         int colsCount = table.findElements(By.tagName("th")).size();
 
-        System.out.println("No of Columns in the table: "+colsCount);
+        System.out.println("No of Columns in the table: " + colsCount);
 
         //writing the data from top 10 Gainers web table to excel sheet GainersData
         List<Double> gainersPercents = writeDataToExcelSheet("//table[@id='topGainers']", rowsCount, colsCount, "GainersData");
@@ -91,7 +90,7 @@ public class NSEIndiaTest6 {
         driver.findElement(By.xpath("//li//a[text()='Losers' or @id='tab8']")).click();
 
         //writing the data from top 10 Losers web table to excel sheet LosersData
-       List<Double> loserPercents = writeDataToExcelSheet("//table[@id='topLosers']", rowsCount, colsCount, "LosersData");
+        List<Double> loserPercents = writeDataToExcelSheet("//table[@id='topLosers']", rowsCount, colsCount, "LosersData");
 
         //verifying  the high to low for Losers
         verifyDescendingOrderOfList(loserPercents, "For Losers");
@@ -105,17 +104,26 @@ public class NSEIndiaTest6 {
         String dateInApp = driver.findElement(By.id("dataTime")).getText();
 
         //Date validation
-        if (dateInApp.contains(systemDate)){
+        if (dateInApp.contains(systemDate)) {
 
             System.out.println("The market is live, and dates are equal");
 
-        }else{
+        } else {
 
             System.out.println("May be market closed, and run this test when market is live");
         }
     }
 
 
+    /**
+     * Writing the data from webTable to excel file
+     *
+     * @param tableXpath
+     * @param rCount
+     * @param cCount
+     * @param sheetName
+     * @return
+     */
     private List<Double> writeDataToExcelSheet(String tableXpath, int rCount, int cCount, String sheetName) {
 
         XSSFSheet sheet = wb.createSheet(sheetName);
@@ -130,7 +138,7 @@ public class NSEIndiaTest6 {
 
                 if (r == 0) {
 
-                    WebElement headerCells = driver.findElement(By.xpath(tableXpath+"/tbody//tr//th[" + (c + 1) + "]"));
+                    WebElement headerCells = driver.findElement(By.xpath(tableXpath + "/tbody//tr//th[" + (c + 1) + "]"));
 
                     String text = headerCells.getText();
 
@@ -143,11 +151,11 @@ public class NSEIndiaTest6 {
                 } else {
 
                     WebElement rowCells = driver
-                            .findElement(By.xpath(tableXpath+"/tbody//tr[" + (r + 1) + "]" + "//td[" + (c + 1) + "]"));
+                            .findElement(By.xpath(tableXpath + "/tbody//tr[" + (r + 1) + "]" + "//td[" + (c + 1) + "]"));
 
                     String text = rowCells.getText();
 
-                    if (c == 2) {
+                    if (c == 2 && !text.equals("-")) {
 
                         changes.add(Double.parseDouble((text.replace("-", ""))));
                     }
@@ -169,30 +177,35 @@ public class NSEIndiaTest6 {
 
     }
 
-    private void verifyDescendingOrderOfList(List<Double> percents, String name){
+    /**
+     * Verifying the descending order of 5 changes
+     *
+     * @param percents
+     * @param name
+     */
+    private void verifyDescendingOrderOfList(List<Double> percents, String name) {
 
         double maximum = percents.get(0);
         //lets say descending order is true, if the List is not in the set false
         boolean descending = true;
 
-        for(int i=1; i<percents.size(); i++){
+        for (int i = 1; i < percents.size(); i++) {
 
-            if(maximum >= percents.get(i)){
+            if (maximum >= percents.get(i)) {
                 //max value changing to next value
                 maximum = percents.get(i);
-            }else {
+            } else {
 
                 descending = false;
             }
         }
 
-        if (descending){
+        if (descending) {
 
-            System.out.println("The percentage is high to low - "+name);
+            System.out.println("The percentage is high to low - " + name);
         }
 
     }
-
 
 
     @AfterMethod

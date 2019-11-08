@@ -35,9 +35,12 @@ public class BaseClass {
 
     }
 
-    @BeforeMethod
-    public static void driverInit(Method method){
-        System.out.println("Executing the test - "+method.getName());
+
+    /**
+     * Browser launch and application navigation
+     */
+    protected void driverInitialization(){
+
         DriverManager.getDriver().manage().window().maximize();
         DriverManager.getDriver().manage().timeouts().implicitlyWait(15, TimeUnit.SECONDS);
         DriverManager.getDriver().get(appUrl);
@@ -45,7 +48,9 @@ public class BaseClass {
         DriverManager.getDriver().manage().deleteAllCookies();
     }
 
-   // @AfterMethod
+
+
+   @AfterMethod
     public static void driverClose(){
 
         DriverManager.quitDriver();
