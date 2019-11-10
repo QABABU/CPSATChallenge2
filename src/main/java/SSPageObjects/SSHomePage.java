@@ -76,7 +76,18 @@ public class SSHomePage {
 
 
     public List<WebElement> getAllBanners(){
+
         return bannerSliders;
+    }
+
+    public void waitForInvisibilityOfFirstSliderButton(){
+
+        CommonActions.waitForElementInvisibility(driver, firstSlickSlideButton);
+    }
+
+    public boolean isFirstSliderButtonDisplayed(){
+
+        return firstSlickSlideButton.isDisplayed();
     }
 
 

@@ -36,6 +36,16 @@ public class CommonActions {
         }
     }
 
+    public static void waitForElementInvisibility(WebDriver driver, WebElement element){
+        try{
+            wait = new WebDriverWait(driver, 20);
+            wait.until(ExpectedConditions.invisibilityOf(element));
+        }catch (Exception e){
+            e.printStackTrace();
+            System.exit(-1);
+        }
+    }
+
     public static void moveToGivenElement(WebDriver driver, WebElement target){
         try{
             waitForElementVisibility(driver, target);
@@ -45,6 +55,15 @@ public class CommonActions {
         }catch (Exception e){
             e.printStackTrace();
             System.exit(-1);
+        }
+    }
+
+    public static void pause(long millis){
+
+        try {
+            Thread.sleep(millis);
+        }catch (Exception e){
+            e.printStackTrace();
         }
     }
 

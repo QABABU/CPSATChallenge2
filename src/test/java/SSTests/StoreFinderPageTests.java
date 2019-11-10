@@ -4,7 +4,6 @@ import SSBase.BaseClass;
 import SSBase.DriverManager;
 import SSPageObjects.SSHomePage;
 import SSPageObjects.SSStoreFinderPage;
-import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -28,6 +27,13 @@ public class StoreFinderPageTests extends BaseClass {
     }
 
 
+    /**
+     * This test prints all the available stores
+     * Verifying Agra, Bhopal and Mysore cities present in the list
+     * @param city1
+     * @param city2
+     * @param city3
+     */
     @Test(dataProvider = "getData")
     public void printAllStores(String city1, String city2, String city3){
         System.out.println("Executing - printAllStores");
@@ -35,9 +41,11 @@ public class StoreFinderPageTests extends BaseClass {
         ssStoreFinderPage = ssHomePage.navigateToStoreFinderPage();
         List<String> options = ssStoreFinderPage.getAllCities();
         System.out.println("Shoppers Stop - all available cities");
+        // print all cities
         for (String option : options) {
             System.out.println(option);
         }
+        // verifying Agra, Bhopal and Mysore in the cities
         softAssert.assertTrue(options.contains(city1));
         softAssert.assertTrue(options.contains(city2));
         softAssert.assertTrue(options.contains(city3));
@@ -47,7 +55,6 @@ public class StoreFinderPageTests extends BaseClass {
 
     @DataProvider
     public Object[][] getData() {
-
         return new Object[][]{{"Agra", "Bhopal", "Mysore"}};
     }
 }

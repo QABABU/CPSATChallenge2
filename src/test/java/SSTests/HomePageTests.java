@@ -1,8 +1,10 @@
 package SSTests;
 
+import HelperClasses.CommonActions;
 import SSBase.BaseClass;
 import SSBase.DriverManager;
 import SSPageObjects.SSHomePage;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
@@ -17,8 +19,8 @@ public class HomePageTests extends BaseClass {
     private SSHomePage ssHomePage;
 
     @BeforeMethod
-    public void setUp(Method method){
-        System.out.println("Executing the test - "+method.getName());
+    public void setUp(Method method) {
+        System.out.println("Executing the test - " + method.getName());
         driverInitialization();
         ssHomePage = new SSHomePage(DriverManager.getDriver());
     }
@@ -27,15 +29,12 @@ public class HomePageTests extends BaseClass {
      * This test clicking on all the banners
      */
     @Test
-    public void clickingBannerSlidersTest(){
+    public void clickingBannerSlidersTest() throws InterruptedException {
         List<WebElement> banners = ssHomePage.getAllBanners();
         int bannersCount = banners.size();
-        String firstBannerTitle = banners.get(0).getAttribute("title");
-        System.out.println("First Banner Title: "+firstBannerTitle);
-        //clicking the banners one by one
-        for (int i=0; i<bannersCount; i++){
-
+        for (int i = 0; i < bannersCount; i++) {
             ssHomePage.clickSliderNextButton();
+            CommonActions.pause(1000);
         }
     }
 

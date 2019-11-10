@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="TestNGXMLTest Test Suite">
+    <test name="Shoppers Stop Tests" verbose="2">
+        <classes>
+            <class name="SSTests.HomePageTests" />
+            <class name="SSTests.StoreFinderPageTests" />
+        </classes>
+    </test>
+</suite>
