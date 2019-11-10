@@ -7,17 +7,19 @@ import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.interactions.Action;
-import org.openqa.selenium.interactions.Actions;
+import org.sikuli.script.FindFailed;
+import org.sikuli.script.Pattern;
+import org.sikuli.script.Screen;
 import org.testng.asserts.SoftAssert;
 
-import static io.restassured.RestAssured.*;
-
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+
+import static io.restassured.RestAssured.given;
 
 public class ValidatingCertificationsTests {
 
@@ -37,12 +39,13 @@ public class ValidatingCertificationsTests {
     /**
      * This test validates certification menu, prints certifications count
      * And verifies the links working or not
+     * Captures screenshot of CP_CCT with tooltip
      *
      * @throws IOException
      * @throws InterruptedException
      */
     @Test
-    public void validateCertificationsTest() throws IOException, InterruptedException {
+    public void validateCertificationsTest() throws IOException, InterruptedException, AWTException, FindFailed {
 
         driver.get("https://agiletestingalliance.org/");
 
@@ -63,7 +66,7 @@ public class ValidatingCertificationsTests {
             System.out.println(image.getAttribute("href"));
         }
 
-        //verifying whether  links are working or not
+        //verifying whether  links are working or not using Rest-assured
         for (String url : urls) {
             int statusCode = given().get(url).getStatusCode();
             softAssert.assertEquals(statusCode, 200);
@@ -77,17 +80,50 @@ public class ValidatingCertificationsTests {
 
         WebElement cp_cct = driver.findElement(By.xpath("//map//area[@alt='CP-CCT']"));
 
-        Actions actions = new Actions(driver);
-        //hovering on the cp_cct image
-        actions.moveToElement(cp_cct).build().perform();
-
-        Thread.sleep(2000);
-
+        //Using Sikuli to capture CP_CCT tooltip
+        moveToElementUsingSikuli();
         File cp_cct_tooltip = capture.getScreenshotAs(OutputType.FILE);
+
         //capturing cp_cct image
         FileUtils.copyFile(cp_cct_tooltip, new File(System.getProperty("user.dir") + "\\screenshots\\cp_cct_tooltip.png"));
 
 
+        //Actions, Robot classes and JavaScriptExecutor didn't work finally Sikuli we helped me complete this task
+          /*int x = cp_cct.getLocation().getX();
+        int y = cp_cct.getLocation().getY();
+        Robot robot = new Robot();
+        robot.mouseMove(x, y);
+        Thread.sleep(3000);*/
+
+       /* String strJavaScript = "var element = arguments[0];"
+                + "var mouseEventObj = document.createEvent('MouseEvents');"
+                + "mouseEventObj.initEvent( 'mouseover', true, true );"
+                + "element.dispatchEvent(mouseEventObj);";
+
+        ((JavascriptExecutor) driver).executeScript(strJavaScript, cp_cct);*/
+
+       /* Actions actions = new Actions(driver);
+        //hovering on the cp_cct image
+        actions.moveToElement(cp_cct).build().perform();
+       */
+
+    }
+
+
+    /**
+     * Mouseover on the CP_CCT image and capture the screenshot with tooltip
+     * @throws FindFailed
+     * @throws InterruptedException
+     */
+    private void moveToElementUsingSikuli() throws FindFailed, InterruptedException {
+
+        Screen screen = new Screen();
+        Pattern cp_cct_img = new Pattern( System.getProperty("user.dir") + "\\screenshots\\cpcct_refrence_img.PNG");
+        screen.wait(cp_cct_img, 20);
+        screen.hover();
+        Thread.sleep(2000);
+        //capturing the screenshot after mouseover
+        screen.saveScreenCapture(System.getProperty("user.dir") + "\\screenshots\\", "cp_cct_tooltip");
     }
 
     @After
